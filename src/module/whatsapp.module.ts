@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { WhatsAppService } from 'src/services/whatsapp.service';
+import { WhatsAppService } from 'src/Aplication/services/whatsapp.service';
 
 
 @Module({

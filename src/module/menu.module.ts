@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MenuService } from '../services/menu.service';
-import { Menu, MenuSchema } from 'src/squema/menu.squema';
-import { MenuController } from 'src/controller/menu.controller';
+import { MenuService } from '../Aplication/services/menu.service';
+import { Menu, MenuSchema } from 'src/Domain/squema/menu.squema';
+import { MenuController } from 'src/Infraestructura/controller/menu.controller';
 
 @Module({
   imports: [

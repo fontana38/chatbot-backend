@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ChatbotMessageDto } from 'src/dto/chatbot-message.dto';
-import { ChatbotService } from 'src/services/chatbot.service';
+import { ChatbotMessageDto } from 'src/Infraestructura/dto/chatbot-message.dto';
+import { ChatbotService } from 'src/Aplication/services/chatbot.service';
 @Controller('chatbot')
 export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}

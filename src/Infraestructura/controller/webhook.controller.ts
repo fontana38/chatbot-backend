@@ -6,7 +6,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { WebhookService } from 'src/services/webhook.service';
+import { WebhookService } from 'src/Aplication/services/webhook.service';
 
 
 @Controller('webhook')

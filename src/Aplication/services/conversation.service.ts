@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Conversation, ConversationDocument } from 'src/squema/conversation.squema';
+import { Conversation, ConversationDocument } from 'src/Domain/squema/conversation.squema';
 
 
 @Injectable()
@@ -13,6 +13,7 @@ export class ConversationService {
 
   async getOrCreate(userId: string) {
     let conversation = await this.conversationModel.findOne({ userId });
+    console.log('conversation',conversation)
 
     if (!conversation) {
       conversation = await this.conversationModel.create({

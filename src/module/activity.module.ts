@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ActivityController } from 'src/controller/activity.controller';
-import { ActivityService } from 'src/services/activity.service';
-import { Activity, ActivitySchema } from 'src/squema/activity';
+import { ActivityController } from 'src/Infraestructura/controller/activity.controller';
+import { ActivityService } from 'src/Aplication/services/activity.service';
+import { Activity, ActivitySchema } from 'src/Domain/squema/activity';
 @Module({
   imports: [
     MongooseModule.forFeature([

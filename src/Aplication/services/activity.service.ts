@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Activity, ActivityDocument } from 'src/squema/activity';
+import { Activity, ActivityDocument } from 'src/Domain/squema/activity';
 
 
 @Injectable()
@@ -230,8 +230,7 @@ export class ActivityService {
   async getByMenuOption(menuOption: string) {
     return this.activityModel.findOne({ menuOption }).lean();
   }
-
-  async getByCode(code: string) {
-    return this.activityModel.findOne({ code }).lean();
-  }
+  async findByCode(code: string) {
+  return this.activityModel.findOne({ code }).lean();
+}
 }
