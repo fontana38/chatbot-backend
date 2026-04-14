@@ -29,7 +29,24 @@ export class ChatbotService {
     params: ProcessMessageParams,
   ): Promise<ChatbotResponse> {
     const message = this.normalizeMessage(params.message);
+    
     const context = params.context ?? {};
+
+    if (this.wantsHuman(message)) {
+  return {
+    response: 'Perfecto. Te derivo con una persona de nuestro equipo 🙌',
+    currentNode: 'human_handoff',
+    context: {
+      ...context,
+      handoffRequested: true,
+    },
+    metadata: {
+      type: 'handoff',
+      transferToHuman: true,
+      reason: 'user_requested_human',
+    },
+  };
+}
 
     if (!message || this.isGreeting(message)) {
       return this.buildMainMenuResponse(context);
@@ -114,15 +131,14 @@ export class ChatbotService {
     };
   }
 
-  private formatMenu(menu: any, invalidOption: boolean): string {
-    const optionsText = (menu.options ?? [])
-      .map((item: any) => `${item.option}. ${item.label}`)
-      .join('\n');
+private formatMenu(menu: any, invalidOption: boolean): string {
+  const optionsText = (menu.options ?? [])
+    .map((item: any) => `${item.option}. ${item.label}`)
+    .join('\n');
 
-    const prefix = invalidOption ? 'Opción inválida.\n\n' : '';
-
-    return `${prefix}${menu.welcomeMessage}\n\n${optionsText}`;
-  }
+  const prefix = invalidOption ? 'Opción inválida.\n\n' : '';
+return `${prefix}${menu.welcomeMessage}\n\n${optionsText}\n\nEscribí "menu" para volver al inicio o "humano" para hablar con una persona.`;
+}
 
   private formatActivity(activity: any): string {
     const parts: string[] = [];
@@ -240,4 +256,16 @@ export class ChatbotService {
       'hi',
     ].includes(normalized);
   }
+  private wantsHuman(message: string): boolean {
+  const normalized = message.toLowerCase();
+
+  return [
+    'humano',
+    'asesor',
+    'persona',
+    'operador',
+    'hablar con alguien',
+    'quiero hablar con alguien',
+  ].includes(normalized);
+}
 }

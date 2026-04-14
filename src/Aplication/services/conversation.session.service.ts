@@ -89,31 +89,39 @@ export class ConversationSessionsService {
   }
 
   async findOrCreateActiveSession(
-    params: FindOrCreateActiveSessionParams,
-  ): Promise<ConversationSessionDocument> {
-    const expirationMinutes = params.expirationMinutes ?? 30;
+  params: FindOrCreateActiveSessionParams,
+): Promise<ConversationSessionDocument> {
+  const expirationMinutes = params.expirationMinutes ?? 30;
 
-    const openSession = await this.findLatestOpenSession(params.contactId);
+  const openSession = await this.findLatestOpenSession(params.contactId);
 
-    if (!openSession) {
-      return this.createSession({
-        contactId: params.contactId,
-        phoneNumber: params.phoneNumber,
-      });
-    }
-
-    if (this.isExpired(openSession, expirationMinutes)) {
-      await this.closeSession(openSession._id.toString());
-
-      return this.createSession({
-        contactId: params.contactId,
-        phoneNumber: params.phoneNumber,
-      });
-    }
-
+  if (openSession && !this.isExpired(openSession, expirationMinutes)) {
     return openSession;
   }
 
+  if (openSession && this.isExpired(openSession, expirationMinutes)) {
+    await this.closeSession(openSession._id.toString());
+  }
+
+  try {
+    return await this.createSession({
+      contactId: params.contactId,
+      phoneNumber: params.phoneNumber,
+    });
+  } catch (error: any) {
+    if (error?.code === 11000) {
+      const existingOpenSession = await this.findLatestOpenSession(
+        params.contactId,
+      );
+
+      if (existingOpenSession) {
+        return existingOpenSession;
+      }
+    }
+
+    throw error;
+  }
+}
   async updateAfterInteraction(
     sessionId: string,
     params: UpdateAfterInteractionParams,
@@ -157,4 +165,20 @@ export class ConversationSessionsService {
       .find({ phoneNumber })
       .sort({ startedAt: -1 });
   }
+
+  async transferToHuman(sessionId: string, reason?: string): Promise<void> {
+  await this.sessionModel.updateOne(
+    { _id: sessionId },
+    {
+      $set: {
+        sessionStatus: 'transferred',
+        sessionType: 'human',
+        currentNode: 'human_handoff',
+        updatedAt: new Date(),
+        'context.handoffReason': reason ?? 'manual',
+        'context.transferredAt': new Date(),
+      },
+    },
+  );
+}
 }

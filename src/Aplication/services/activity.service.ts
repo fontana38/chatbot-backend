@@ -5,7 +5,8 @@ import { Activity, ActivityDocument } from 'src/Domain/squema/activity';
 
 
 @Injectable()
-export class ActivityService {
+export class ActivityService
+ {
   constructor(
     @InjectModel(Activity.name)
     private readonly activityModel: Model<ActivityDocument>,

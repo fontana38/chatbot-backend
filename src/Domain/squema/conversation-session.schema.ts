@@ -66,3 +66,11 @@ export const ConversationSessionSchema =
 ConversationSessionSchema.index({ contactId: 1, startedAt: -1 });
 ConversationSessionSchema.index({ phoneNumber: 1, startedAt: -1 });
 ConversationSessionSchema.index({ sessionStatus: 1, lastMessageAt: -1 });
+
+ConversationSessionSchema.index(
+  { contactId: 1, sessionStatus: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { sessionStatus: 'open' },
+  },
+);

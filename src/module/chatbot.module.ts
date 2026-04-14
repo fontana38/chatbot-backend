@@ -10,6 +10,7 @@ import { ConversationModule } from './conversation.module';
 
 @Module({
   imports: [ActivityModule, MenuModule, ConversationModule],
+  controllers: [ChatbotController],
   providers: [ChatbotService],
   exports: [ChatbotService],
 })
